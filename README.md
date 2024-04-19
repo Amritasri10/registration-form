@@ -18,4 +18,4 @@ Additionally, Express-session is implemented to track and manage user sessions, 
 2. Run `[npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) install` to install dependencies.
 3. Start the MongoDB server.
 4. Run `node server.js` to start the application.
-5. Open your browser and go to `(http://localhost:8003/)`.
+5. Open your browser and go to (http://localhost:8003/).
