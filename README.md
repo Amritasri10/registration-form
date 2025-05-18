@@ -147,13 +147,13 @@ Google callback URL (used internally by Passport.js).
 
 ## 📦 Setup Instructions
 
-### Prerequisites:
+### 🔹 Prerequisites:
 
 - [Node.js installed](https://nodejs.org/)
 - [MongoDB Atlas account](https://www.mongodb.com/cloud/atlas)
 - [Gmail account (or SMTP credentials)](https://support.google.com/mail/answer/7126229?hl=en)
 
-### Installation
+### 🔹 Installation
 
 1. Clone the repo:
     `git clone https://github.com/Amritasri10/registration-form.git
