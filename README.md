@@ -113,7 +113,7 @@ On the **backend**, robust logic ensures secure data handling, user validation, 
 ![Success Page](./screenshots/success-page.png)
 
 #### Google OAuth Welcome Email
-![Google OAuth Mail](./screenshots/google-auth-email.png)
+![Google OAuth Mail](./screenshots/google-auth-emai.png)
 
 ---
 
