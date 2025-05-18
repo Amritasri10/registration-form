@@ -156,26 +156,31 @@ Google callback URL (used internally by Passport.js).
 ### 🔹 Installation
 
 1. Clone the repo:
-    `git clone https://github.com/Amritasri10/registration-form.git
-    cd registration-form`
+   
+        `git clone https://github.com/Amritasri10/registration-form.git
+         cd registration-form`
 
-2. Install dependencies:
-    `npm install` 
+3. Install dependencies:
+   
+        `npm install` 
 
-3. Create .env file:
-   `PORT=5000
-    MONGO_URI=your_mongo_connection_string
-    JWT_SECRET=your_jwt_secret
-    EMAIL_USER=your_email@example.com
-    EMAIL_PASS=your_email_password
-    GOOGLE_CLIENT_ID=your_google_client_id
-    GOOGLE_CLIENT_SECRET=your_google_client_secret`
+4. Create .env file:
+   
+       `PORT=5000
+        MONGO_URI=your_mongo_connection_string
+        JWT_SECRET=your_jwt_secret
+        EMAIL_USER=your_email@example.com
+        EMAIL_PASS=your_email_password
+        GOOGLE_CLIENT_ID=your_google_client_id
+        GOOGLE_CLIENT_SECRET=your_google_client_secret`
 
-4. Start the app:
-    `node server.js`
+5. Start the app:
+   
+        `node server.js`
 
-5. Open your browser and visit:
-    `http://localhost:5000`
+6. Open your browser and visit:
+
+        `http://localhost:5000`
 
 ---
 
@@ -196,4 +201,5 @@ This project is licensed under the MIT License - feel free to use it for persona
 
 ## Author 
 
-[]() | []()
+Connect with me on:
+[LinkedIn ](https://www.linkedin.com/in/amrita-srivastava10/) | [GitHub](https://github.com/Amritasri10)
