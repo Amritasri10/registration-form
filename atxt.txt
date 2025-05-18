@@ -1,0 +1,212 @@
+tYKNsEv9otabs4SG
+
+mongodb+srv://srivastavamrita77a:tYKNsEv9otabs4SG@cluster0.yvjdyft.mongodb.net/
+
+
+
+// Importing required packages
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const colors = require("colors");
+const dotenv = require("dotenv");
+const path = require('path');
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const session = require('express-session');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+require('dotenv').config(); // Load environment variables from .env
+
+const app = express();
+
+// Load environment variables again (optional here since already loaded above)
+dotenv.config();
+
+// Middleware Setup 
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(express.json());                         // Parse JSON bodies
+app.use(morgan('dev'));                          // Logger middleware
+app.use(cors());                                 // Enable Cross-Origin Resource Sharing
+app.use(express.static(path.join(__dirname, 'public'))); // Serve static files from /public
+app.use(session({ secret: 'your_secret', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+//  Connect to MongoDB Atlas
+mongoose.connect(process.env.MONGO_URI, {
+})
+  .then(() => {
+    console.log(
+      Connected to MongoDB Database: ${mongoose.connection.name} at host: ${mongoose.connection.host}.magenta.bold
+    );
+  })
+  .catch((error) => {
+    console.log(Error: ${error.message}.red.underline);
+  });
+
+
+  // Define the User schema for MongoDB
+  const UserSchema = new mongoose.Schema({
+    // Username field: required and cannot be empty
+    username: {
+      type: String,
+      required: [true, 'Username is required'],
+    },
+    
+    // Email field: required, must be unique (for user identification)
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,  // Ensures that each email is unique
+    },
+    
+    // Password field: required only if no googleId is provided (for regular users)
+    password: {
+      type: String,
+      required: function () {
+        // Password is required only if googleId is not set (for normal authentication)
+        return !this.googleId; 
+      }
+    },
+    
+    // Google ID field: unique and sparse to avoid errors when some users don't use Google login
+    googleId: {
+      type: String,
+      unique: true,  // Ensures that the googleId is unique if provided
+      sparse: true,  // Avoids duplication errors for users without googleId
+    }
+  }, {
+    // Automatically add 'createdAt' and 'updatedAt' fields to the schema
+    timestamps: true
+  });
+  
+  // Create the User model from the schema
+  const User = mongoose.model('User', UserSchema);
+
+// ===== Passport Configuration for Google OAuth =====
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:8003/auth/google/callback"
+},
+  async (token, tokenSecret, profile, done) => {
+    try {
+      // Check if user already exists in the database
+      let user = await User.findOne({ googleId: profile.id });
+
+      if (!user) {
+        // If user does not exist, create a new user
+        user = new User({
+          username: profile.displayName,
+          email: profile.emails[0].value,
+          googleId: profile.id,
+          password: null, // No password needed for Google login
+        });
+
+        await user.save();
+      }
+
+      return done(null, user);
+    } catch (error) {
+      console.log(error);
+      return done(error, null);
+    }
+  }
+));
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+// Routes 
+
+// Home route - serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.dirname(__dirname) + '/public/index.html');
+});
+
+// Google login route
+app.get('/auth/google',
+  passport.authenticate('google', {
+    scope: ['profile', 'email']
+  })
+);
+
+// Google OAuth callback route
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    res.redirect('/profile');
+  }
+);
+
+// Profile route (after successful login)
+app.get('/profile', (req, res) => {
+  if (!req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+  res.send(<h1>Hello ${req.user.username}</h1><br><img src="${req.user.photos[0].value}" />);
+});
+
+// Register route - handle user registration
+app.post('/register', async (req, res) => {
+  try {
+    const { username, email, password } = req.body;
+
+    // Validate required fields
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        message: "All fields are required",
+        success: false
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(200).json({
+        message: "User already exists",
+        success: false
+      });
+    }
+
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Save new user to DB
+    const user = await new User({ username, email, password: hashedPassword }).save();
+
+    // Redirect to success page
+    return res.redirect('/success');
+
+  } catch (error) {
+    console.log(error);
+
+    // Redirect to error page in case of failure
+    return res.redirect('/error');
+  }
+});
+
+// Success route handlers
+app.get('/success', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/success.html'));
+});
+
+//Error route handlers
+app.get('/error', (req, res) => {
+  res.sendFile(path.join(__dirname, '/public/error.html'));
+});
+
+// Start the Server 
+const PORT = process.env.PORT || 8003;
+app.listen(PORT, () => {
+  console.log(Server running in ${process.env.NODE_ENV} mode on port ${PORT}.yellow.bold);
+});

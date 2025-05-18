@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>REGISTER PAGE</title>
+  <title>OTP Verification</title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome -->
 </head>
@@ -270,49 +270,24 @@
     <span></span>
     <span></span>
 
+    
     <div class="signin">
       <div class="content">
-        <h2>REGISTER</h2>
-        <form action="/auth/register" method="post" class="form">
+        <h2>OTP Verification</h2>
+        <form action="/auth/verify-otp" method="POST" class="form">
           <div class="inputBox">
-            <input type="text"  name="username" required="">
-            <i>Username</i>
-          </div>
-          <div class="inputBox">
-            <input type="email"  name="email" required>
-            <i>E-Mail</i>
+            <input type="text" name="otp" required />
+            <i>OTP</i>
           </div>
           <div class="inputBox">
-            <input type="password"  name="password" required>
-            <i>Password</i>
+            <input type="submit" value="Verify OTP" />
           </div>
-          <div class="links">
-            <a href="#">Forgot Password</a>
-            <a href="/auth/login">Sign In</a>
-          </div>
-          <div class="inputBox">
-            <input type="submit" value="Sign Up">
-          </div>
-      </form>
-        <!-- Social Login Buttons -->
-        <div class="social-login">
-          <p>or Register with</p>
-          <div class="social-icons">
-            <a href="http://localhost:5000/auth/google" class="social-icon google"><i class="fab fa-google"></i> </a>
-            <a href="#" class="social-icon facebook"><i class="fab fa-facebook"></i></a> 
-            <a href="#" class="social-icon twitter"><i class="fab fa-twitter"></i> </a>
-          </div>
+        </form>
+        <div class="links">
+          <a href="/auth/login">Back to Login</a>
         </div>
       </div>
     </div>
   </section>
-  <script>
-  // Call this after successful registration and OTP sent
-  function handleOtpSent() {
-    alert("OTP sent to your email!");
-    window.location.href = "/auth/verify-otp";
-  }
-</script>
-
 </body>
 </html>
