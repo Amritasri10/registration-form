@@ -160,11 +160,11 @@ Google callback URL (used internally by Passport.js).
         `git clone https://github.com/Amritasri10/registration-form.git
          cd registration-form`
 
-3. Install dependencies:
+2. Install dependencies:
    
         `npm install` 
 
-4. Create .env file:
+3. Create .env file:
    
        `PORT=5000
         MONGO_URI=your_mongo_connection_string
@@ -174,11 +174,11 @@ Google callback URL (used internally by Passport.js).
         GOOGLE_CLIENT_ID=your_google_client_id
         GOOGLE_CLIENT_SECRET=your_google_client_secret`
 
-5. Start the app:
+4. Start the app:
    
         `node server.js`
 
-6. Open your browser and visit:
+5. Open your browser and visit:
 
         `http://localhost:5000`
 
